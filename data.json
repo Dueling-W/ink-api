@@ -1,0 +1,12 @@
+{
+    "SCC": {
+        "squidAmount": 0,
+        "inkAmount": 0,
+        "nightSquidCaught": 0,
+        "x": 20,
+        "y": 20,
+        "looting": 5,
+        "squidInkNum": 8.75,
+        "nightSquidInkNum": 40
+    }
+}
