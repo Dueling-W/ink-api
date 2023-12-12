@@ -1,7 +1,7 @@
 {
-    "name": "ExampleMod",
+    "name": "InkUtilities",
     "creator": "DuelingCharges",
-    "description": "Our first module",
+    "description": "Run the command /ink to get started!",
     "version": "1.0.0",
     "entry": "index.js",
     "requires": [
