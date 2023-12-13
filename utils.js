@@ -1,7 +1,7 @@
 import PogObject from "../PogData";
 
 export let data = new PogObject("InkUtilities", {
-    "SCC": {
+    "INK": {
         "squidAmount": 0,
         "inkAmount": 0,
         "nightSquidCaught": 0,
@@ -10,5 +10,13 @@ export let data = new PogObject("InkUtilities", {
         "looting": 5,
         "squidInkNum": 8.75,
         "nightSquidInkNum": 40
+    },
+    "SCC": {
+        "ttlSCC": 0,
+        "emp": 0,
+        "hydra": 0,
+        "x": 0,
+        "y": 0,
+        "empTime": 0
     }
 }, "data.json")
