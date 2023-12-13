@@ -1,54 +1,65 @@
-//Sea Creature Dictionary (FOR INK ONLY)
-let SCC = {
+import { data } from "./utils"
+
+
+//local dic
+let localSCC = {
     squidAmount: 0,
     inkAmount: 0,
     nightSquidCaught: 0,
-    x: 150,
-    y: 150,
-    looting: 5,
-    squidInkNum: 8.75,
-    nightSquidInkNum: 40,
     timeElap: 0,
     inkPerHour: 0
 };
 
-//Create a display, background is set per line, render display at the default x and y coordinates
 var display = new Display();
-display.setBackground("per line");
-display.setRenderLoc(SCC.x,SCC.y);
+display.setBackground("none");
+display.setRenderLoc(data.INK.x, data.INK.y);
 
-
-//Trigger var for starting/stopping ink tracking
 var value = -1;
-
-//Trigger var for double hook 
 var dh = -1;
-
-//Temp var for ink/hr calcs
-var tempInk = 0;
-
-//Trigger var for timer starting/stopping
 var timeTF = -1;
 
 
+//========START AND STOP INK TRACKING========
+//
+//
+//
 
-//Register commands to start/stop ink tracking
 register("command", startTracking).setName("inkGo");
 register("command", stopTracking).setName("inkStop");
 
+function startTracking() {
+    ChatLib.chat("Now Tracking Squids and Ink!!");
+    value = 0;
+    display.show();
+}
 
-//Register looting command (default looting 5)
+function stopTracking() {
+    ChatLib.chat("Squid and Ink Tracking Stopped.");
+    display.hide();
+    value = -1;
+}
+
+
+//========SET LOOTING========
+//
+//
+//
+
 register("command", (x) => {
 
     x = parseInt(x);
 
     if(x==4){
-        SCC.squidInkNum = 8;
-        SCC.nightSquidInkNum = 36.8;
+        data.INK.looting = 4;
+        data.INK.squidInkNum = 8;
+        data.INK.nightSquidInkNum = 36.8;
+        data.save();
         ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
     } else if(x == 5) {
-        SCC.squidInkNum =8.75;
-        SCC.nightSquidInkNum = 40;
+        data.INK.looting = 5;
+        data.INK.squidInkNum =8.75;
+        data.INK.nightSquidInkNum = 40;
+        data.save();
         ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
     } else {
         ChatLib.chat("&bInvalid looting value of " + x + " entered. Please enter either looting 4 or 5.");
@@ -56,7 +67,12 @@ register("command", (x) => {
 }).setName("looting");
 
 
-//Register timer
+
+//========SESSION TIMER========
+//
+//
+//
+
 register("command", (message) =>{
 
     if(message.toLowerCase() == "start") {
@@ -69,15 +85,17 @@ register("command", (message) =>{
         ChatLib.chat("&bInvalid condition of " + message + " entered. Please enter either start or stop.");
     }
 
-}).setName("track");
+}).setName("inkTimer");
 
 
 
 
-//========MOVE SCREEN COMMANDS AND FUNCTION========
 
+//========MOVE DISPLAY========
+//
+//
+//
 
-//Register command to move the display
 register("command", (x,y) => {
     x = parseInt(x);
     y = parseInt(y);
@@ -85,41 +103,25 @@ register("command", (x,y) => {
     updateDisplay(x, y);
     ChatLib.chat("&aDisplay moved to: " + x + ", " + y);
 
-}).setName("moveDisplay");
+}).setName("moveDisplayINK");
 
-//Update the display with new x and y values
+
 function updateDisplay(x, y) {
-    displayX = x;
-    displayY = y;
-    display.setRenderLoc(displayX, displayY);
-}
-
-
-
-
-//========START AND STOP INK TRACKING========
-
-
-//Accounces ink tracking will start
-function startTracking() {
-    ChatLib.chat("Now Tracking Squids and Ink!!");
-    value = 0;
-    display.show();
-}
-
-//Accounces ink tracking will stop
-function stopTracking() {
-    ChatLib.chat("Squid and Ink Tracking Stopped.");
-    display.hide();
-    value = -1;
+    data.INK.x = x;
+    data.INK.y = y;
+    data.save();
+    display.setRenderLoc(x, y);
 }
 
 
 
 
 
-//========DOUBLE HOOK CHAT CONDITIONS========
 
+//========DOUBLE HOOK========
+//
+//
+//
 
 register("chat", () => {
     dh = 0;
@@ -135,41 +137,49 @@ register("chat", () => {
 
 
 
+//========TRACK SQUIDS AND NIGHT SQUIDS========
+//
+//
+//
 
-//========INCREMENT SQUID TRACKER========
-
-
-
-//Increments squid tracker/ink tracker
 register("chat", () => {
     if(!value==0) return;
 
     if(dh ==0) {
-        SCC.squidAmount += 2;
-        SCC.inkAmount += ((SCC.squidInkNum)*2);
+        localSCC.squidAmount += 2;
+        localSCC.inkAmount += ((data.INK.squidInkNum)*2);
+        data.INK.squidAmount += 2;
+        data.INK.inkAmount += ((data.INK.squidInkNum)*2);
+        data.save();
         dh = -1
     } else {
-        SCC.squidAmount += 1;
-        //Based on Looting 5 + Squid Pet (will be changed to base on sacks soon TM)
-        SCC.inkAmount += (SCC.squidInkNum);
+        localSCC.squidAmount += 1;
+        localSCC.inkAmount += ((data.INK.squidInkNum));
+        data.INK.squidAmount += 1;
+        data.INK.inkAmount += ((data.INK.squidInkNum));
+        data.save();
         dh = -1
 
     }
 
 }).setCriteria("A Squid appeared.");
 
-
-//Increments night squid tracker/ink tracker
 register("chat", () => {
     if(!value==0)return;
 
     if(dh==0) {
-        SCC.nightSquidCaught += 2;
-        SCC.inkAmount += ((SCC.nightSquidInkNum)*2);
+        localSCC.nightSquidCaught += 2;
+        localSCC.inkAmount += ((data.INK.nightSquidInkNum)*2);
+        data.INK.nightSquidCaught += 2;
+        data.INK.inkAmount += ((data.INK.nightSquidInkNum)*2);
+        data.save();
         dh = -1
     } else {
-        SCC.nightSquidCaught += 1;
-        SCC.inkAmount += (SCC.nightSquidInkNum);
+        localSCC.nightSquidCaught += 1;
+        localSCC.inkAmount += ((data.INK.nightSquidInkNum));
+        data.INK.nightSquidCaught += 1;
+        data.INK.inkAmount += ((data.INK.nightSquidInkNum));
+        data.save();
         dh = -1
     }
 
@@ -179,49 +189,59 @@ register("chat", () => {
 
 
 
-//========CALCULATE INK PER HOUR========
+
+//========CALC INK PER HOUR========
+//
+//
+//
+
 register("step", () => {
     if(!timeTF==0) return;
-    SCC.timeElap += 1
+    localSCC.timeElap += 1
 
-    var tempInk = (SCC.inkAmount) / (SCC.timeElap);
+    var tempInk = (localSCC.inkAmount) / (localSCC.timeElap);
     tempInk = Math.round((tempInk *3600), 0);
-    SCC.inkPerHour = tempInk;
+    localSCC.inkPerHour = tempInk;
 
 }).setFps(1);
 
 
 
-//========RENDER INK DISPLAY========
+//========RENDER DISPLAY========
+//
+//
+//
 
-
-//Render the display overlay
 register ("tick", () => {
     if(!value==0) return;
-    var inkValue = SCC.inkAmount;
-    inkString = inkValue.toString();
 
-    var squidAmount = SCC.squidAmount;
-    squidString = squidAmount.toString();
+    var inkValue = localSCC.inkAmount;
+    inkValue = Math.round(inkValue, 0);
 
-    var nightSquid = SCC.nightSquidCaught;
-    nightString = nightSquid.toString();
+    var squidAmount = localSCC.squidAmount;
+    var nightSquid = localSCC.nightSquidCaught;
+    var perHour = localSCC.inkPerHour;
 
-    var perHour = SCC.inkPerHour;
-    perHourString = perHour.toString();
-
-    var minutes = (SCC.timeElap) / 60;
+    var minutes = (localSCC.timeElap) / 60;
     minutes = Math.round(minutes, 1);
-    minutes = minutes.toString();
 
-    display.setLine(0, "&1" + "Ink Info Display!");
-    display.setLine(1, "&6" + "Ink Gained: " + inkString);
-    display.setLine(2, "&b" + "Squids Caught: " + squidString);
-    display.setLine(3, "&d" + "Night Squids Caught: " + nightString);
-    display.setLine(4, "&4" + "Ink Per Hour: " + perHourString);
+    var inkRound = Math.round(data.INK.inkAmount, 0);
+    inkRound = inkRound.toLocaleString();
+
+    var newDisplayLine = new DisplayLine("&b&l==Ink Info Display!==");
+    newDisplayLine.setShadow(true);
+
+    display.setLine(0, newDisplayLine);
+    display.setLine(1, "&6" + "Ink Gained: " + inkValue);
+    display.setLine(2, "&b" + "Squids Caught: " + squidAmount);
+    display.setLine(3, "&d" + "Night Squids Caught: " + nightSquid);
+    display.setLine(4, "&4" + "Ink Per Hour: " + perHour);
     if(minutes <=1) {
         display.setLine(5, "&2" + "Time Elapsed: " + minutes + " minute");
     } else {
         display.setLine(5, "&2" + "Time Elapsed: " + minutes + " minutes")
     }
+    display.setLine(6, "&6" + "Total Ink Gained: " + inkRound);
+    display.setLine(7, "&b" + "Total Squids Caught: " + data.INK.squidAmount);
+    display.setLine(8, "&d" + "Total Night Squids Caught: " + data.INK.nightSquidCaught);
 })
