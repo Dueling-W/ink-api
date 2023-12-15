@@ -18,5 +18,13 @@ export let data = new PogObject("InkUtilities", {
         "x": 0,
         "y": 0,
         "empTime": 0
+    },
+     "CONFIG": {
+        "inkColor": "&b",
+        "sccColor": "&4",
+        "moneyColor": "&2",
+        "inkShadow": true,
+        "sccShadow": true,
+        "moneyShadow": true
     }
 }, "data.json")
