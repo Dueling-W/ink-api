@@ -16,5 +16,13 @@
         "x": 10,
         "y": 110,
         "empTime": 0
+    },
+    "CONFIG": {
+        "sccColor": "&6",
+        "moneyColor": "&2",
+        "inkColor": "&b",
+        "inkShadow": true,
+        "sccShadow": true,
+        "moneyShadow": true
     }
 }
