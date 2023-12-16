@@ -1,4 +1,5 @@
 import { data } from "./utils"
+import settings from "./settings"
 
 
 //local dic
@@ -10,16 +11,13 @@ let localSCC = {
     sesCarrot: 0
 };
 
-var display = new Display();
-display.setBackground("none");
-display.setRenderLoc(data.SCC.x, data.SCC.y);
+var movecounter = new Gui();
 
-const sccColor = data.CONFIG.sccColor;
+var gui = new Gui();
+
 const sccShadow = data.CONFIG.sccShadow;
 
 
-var value = -1;
-var timeTF = -1;
 var dh = -1;
 
 //All chats for water sea creatures
@@ -46,89 +44,34 @@ var empString2 = "Total Emps Caught: " + data.SCC.emp;
 var mooString2 = "Total Agarimoos Caught: " + data.SCC.moo;
 var carrotString2 = "Total Carrot Kings Caught: " + data.SCC.carrot;
 
-//display line objects
-var title = setTitle(titleString, sccColor, sccShadow);
-var scc = setTitle(sccString, sccColor, sccShadow);
-var hydra = setTitle(hydraString, sccColor, sccShadow);
-var emp = setTitle(empsString, sccColor, sccShadow);
-var moo = setTitle(mooString, sccColor, sccShadow);
-var carrot = setTitle(carrotString, sccColor, sccShadow);
-var minute = setTitle(minuteString, sccColor, sccShadow);
-var minutes = setTitle(minutesString, sccColor, sccShadow);
-var scc2 = setTitle(sccString2, sccColor, sccShadow);
-var hydra2 = setTitle(hydraString2, sccColor, sccShadow);
-var emp2 = setTitle(empString2, sccColor, sccShadow);
-var moo2 = setTitle(mooString2, sccColor, sccShadow);
-var carrot2 = setTitle(carrotString2, sccColor, sccShadow);
-
-
-
-
-//========START AND STOP SC TRACKING========
-//
-//
-//
-
-register("command", startTracking).setName("sccGo");
-
-register("command", stopTracking).setName("sccStop");
-
-function startTracking() {
-    ChatLib.chat("Now Tracking Sea Creatures!!");
-    value = 0;
-    display.show();
-}
-
-//Accounces ink tracking will stop
-function stopTracking() {
-    ChatLib.chat("Sea Creature Tracking Stopping.");
-    display.hide();
-    value = -1;
-}
-
-
-
-
-//========EMP TIMER========
-//
-//
-//
-
-register("command", (message) => {
-
-    if(message.toLowerCase() == "start") {
-        ChatLib.chat("&bSea Emp timer started!");
-        timeTF = 0;
-    } else if(message.toLowerCase() == "stop") {
-        ChatLib.chat("&bSea Emp timer stopped!");
-        timeTF = -1;
-    } else {
-        ChatLib.chat("&bInvalid condition of " + message + " entered. Please enter either start or stop.");
-    }
-
-}).setName("empTimer");
-
-
 //========MOVE DISPLAY========
 //
 //
 //
 
-register("command", (x,y) => {
-    x = parseInt(x);
-    y = parseInt(y);
+register("dragged", (dx, dy, x, y) => {
+    if (!movecounter.isOpen()) return
+    data.SCC.x = x
+    data.SCC.y = y
+    data.save()
+});
 
-    updateDisplay(x, y);
-    ChatLib.chat("&aDisplay moved to: " + x + ", " + y);
+register("command", () => {
+    movecounter.open()
+}).setName("movescdisplay");
 
-}).setName("moveDisplaySCC");
 
-function updateDisplay(x, y) {
-    data.SCC.x = x;
-    data.SCC.y = y;
-    data.save();
-    display.setRenderLoc(x, y);
-}
+
+register("dragged", (dx, dy, x, y) => {
+    if (!gui.isOpen()) return;
+    data.SCC.xgui = x
+    data.SCC.ygui = y
+    data.save()
+});
+
+register("command", () => {
+    gui.open();
+}).setName("scGui");
 
 
 
@@ -159,7 +102,6 @@ register("chat", () => {
 
 //emp
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh == 0) {
         localSCC.sesEmp += 2;
@@ -175,12 +117,11 @@ register("chat", () => {
         data.save();
     }
 
-}).setCriteria("Sea Emperor arises from the depths.");
+}).setCriteria("The Sea Emperor arises from the depths.");
 
 
 //hydra
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh == 0) {
         localSCC.sesHydra += 2;
@@ -198,28 +139,26 @@ register("chat", () => {
 
 //moo
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh == 0) {
         localSCC.sesMoo += 2;
         data.SCC.moo += 2;
-        data.SCC.tongue += ((data.SCC.mooDrop) *2);
         dh = -1;
         data.save();
+        data.SCC.tongue += ((data.SCC.mooDrop) *2);
     } else {
         localSCC.sesMoo += 1;
         data.SCC.moo += 1;
-        data.SCC.tongue += (data.SCC.mooDrop);
         dh = -1;
         data.save();
+        data.SCC.tongue += (data.SCC.mooDrop);
     }
 
 }).setCriteria("Your Chumcap Bucket trembles, it's an Agarimoo.");
 
 
-//moo
+//carrot
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh == 0) {
         localSCC.sesCarrot += 2;
@@ -238,7 +177,6 @@ register("chat", () => {
 
 //all
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh == 0) {
         localSCC.sesSCC += 2;
@@ -257,7 +195,7 @@ register("chat", () => {
 
 //Time since emp tracker
 register("step", () => {
-    if(!timeTF==0) return;
+    if(!settings.empTimer) return;
 
     data.SCC.empTime += 1;
     data.save();
@@ -292,56 +230,129 @@ register("step", () => {
     mooString2 = "Total Agarimoos Caught: " + data.SCC.moo;
     carrotString2 = "Total Carrot Kings Caught: " + data.SCC.carrot;
 
-    //display line objects
-    title = setTitle(titleString, sccColor, sccShadow);
-    scc = setTitle(sccString, sccColor, sccShadow);
-    hydra = setTitle(hydraString, sccColor, sccShadow);
-    emp = setTitle(empsString, sccColor, sccShadow);
-    moo = setTitle(mooString, sccColor, sccShadow);
-    carrot = setTitle(carrotString, sccColor, sccShadow);
-    minute = setTitle(minuteString, sccColor, sccShadow);
-    minutes = setTitle(minutesString, sccColor, sccShadow);
-    scc2 = setTitle(sccString2, sccColor, sccShadow);
-    hydra2 = setTitle(hydraString2, sccColor, sccShadow);
-    emp2 = setTitle(empString2, sccColor, sccShadow);
-    moo2 = setTitle(mooString2, sccColor, sccShadow);
-    carrot2 = setTitle(carrotString2, sccColor, sccShadow);
 
-
-
-}).setFps(1);
-
-
-register ("tick", () => {
-    if(!value==0) return;
-
-    display.setLine(0, title);
-    display.setLine(1, scc);
-    display.setLine(2, hydra);
-    display.setLine(3, emp);
-    display.setLine(4, moo);
-    display.setLine(5, carrot);
-
-    if(minutes <=1) {
-        display.setLine(6, minute);
-    } else {
-        display.setLine(6, minutes);
-    }
-
-    display.setLine(7, scc2);
-    display.setLine(8, hydra2);
-    display.setLine(9, emp2);
-    display.setLine(10, moo2);
-    display.setLine(11, carrot2);
 
 });
 
 
-//set shadow, color function
-function setTitle(words, color, shadow) {
+register ("renderOverlay", () => {
 
-    const word = new DisplayLine(color + words);
-    word.setShadow(shadow);
-    return word;
-};
 
+    if(settings.creatureDisplay) {
+
+        const color = settings.scColor;
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(titleString, data.SCC.x, data.SCC.y, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString, data.SCC.x, data.SCC.y+10, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString, data.SCC.x, data.SCC.y+20, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empsString, data.SCC.x, data.SCC.y+30, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString, data.SCC.x, data.SCC.y+40, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString, data.SCC.x, data.SCC.y+50, true);
+
+        if(minutes <=1) {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minuteString, data.SCC.x, data.SCC.y+60, true);     
+        } else {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minutesString, data.SCC.x, data.SCC.y+60, true);
+        }
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString2, data.SCC.x, data.SCC.y+70, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString2, data.SCC.x, data.SCC.y+80, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empString2, data.SCC.x, data.SCC.y+90, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString2, data.SCC.x, data.SCC.y+100, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString2, data.SCC.x, data.SCC.y+110, true);
+
+    }
+
+
+    if (movecounter.isOpen() && settings.creatureDisplay) {
+        const color = settings.scColor
+
+        Renderer.drawStringWithShadow(`x: ${Math.round(data.SCC.x)}, y: ${Math.round(data.SCC.y)}`, parseInt(data.SCC.x) - 65, parseInt(data.SCC.y) - 12)
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(titleString, data.SCC.x, data.SCC.y, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString, data.SCC.x, data.SCC.y+10, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString, data.SCC.x, data.SCC.y+20, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empsString, data.SCC.x, data.SCC.y+30, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString, data.SCC.x, data.SCC.y+40, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString, data.SCC.x, data.SCC.y+50, true);
+
+        if(minutes <=1) {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minuteString, data.SCC.x, data.SCC.y+60, true);     
+        } else {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minutesString, data.SCC.x, data.SCC.y+60, true);
+        }
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString2, data.SCC.x, data.SCC.y+70, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString2, data.SCC.x, data.SCC.y+80, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empString2, data.SCC.x, data.SCC.y+90, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString2, data.SCC.x, data.SCC.y+100, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString2, data.SCC.x, data.SCC.y+110, true);   
+
+    }
+
+
+    if(gui.isOpen()) {
+
+        const color = settings.scColor;
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(titleString, data.SCC.xgui, data.SCC.ygui, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString, data.SCC.xgui, data.SCC.ygui+10, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString, data.SCC.xgui, data.SCC.ygui+20, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empsString, data.SCC.xgui, data.SCC.ygui+30, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString, data.SCC.xgui, data.SCC.ygui+40, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString, data.SCC.xgui, data.SCC.ygui+50, true);
+
+        if(minutes <=1) {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minuteString, data.SCC.xgui, data.SCC.ygui+60, true);     
+        } else {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+            Renderer.drawString(minutesString, data.SCC.xgui, data.SCC.ygui+60, true);
+        }
+
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(sccString2, data.SCC.xgui, data.SCC.ygui+70, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(hydraString2, data.SCC.xgui, data.SCC.ygui+80, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(empString2, data.SCC.xgui, data.SCC.ygui+90, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(mooString2, data.SCC.xgui, data.SCC.ygui+100, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(carrotString2, data.SCC.xgui, data.SCC.ygui+110, true);
+
+    }
+
+});
