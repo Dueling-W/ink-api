@@ -1,95 +1,76 @@
 //import localSCC from "./sccTracker.js"
 import { data } from "./utils"
+import settings from "./settings"
 
-var display = new Display();
-display.setBackground("none");
-display.setRenderLoc(data.SCC.moneyX, data.SCC.moneyY);
-
-
+//call api
 const url = "https://api.hypixel.net/skyblock/bazaar";
-
 const result = FileLib.getUrlContent(url);
-
 const jsonObject = JSON.parse(result);
 
 var totalMoney = 0;
-
-var value = -1;
-
-const moneyColor = data.CONFIG.moneyColor;
-const moneyShadow = data.CONFIG.moneyShadow;
+var movecounter = new Gui();
+var gui = new Gui();
 
 
-//========START AND STOP INK TRACKING========
+//========MOVE DISPLAY========
 //
 //
 //
 
-register("command", startTracking).setName("moneyGo");
-register("command", stopTracking).setName("moneyStop");
+register("dragged", (dx, dy, x, y) => {
+    if (!movecounter.isOpen()) return
+    data.SCC.moneyX = x
+    data.SCC.moneyY = y
+    data.save()
+});
 
-function startTracking() {
-    ChatLib.chat("Tracking Money per Hour!");
-    value = 0;
-    display.show();
-}
-
-function stopTracking() {
-    ChatLib.chat("Money per Hour tracking stopped.");
-    display.hide();
-    value = -1;
-}
+register("command", () => {
+    movecounter.open()
+}).setName("movemoneydisplay");
 
 
+//========RENDER DISPLAY========
+//
+//
+//
 
 
 register("step", () => {
 
-    if(!value==0) return;
+    if(!settings.moneyDisplay) return;
 
     const inkPrice = jsonObject.products.INK_SACK.quick_status.buyPrice;
-    const tonguePrice = jsonObject.products.AGARIMOO_TONGUE.quick_status.buyPrice;
-
 
 
     var inkMoney = (inkPrice) * (data.INK.inkPerHour);
-    var tongueMoney = (tonguePrice) * (data.SCC.tongue);
-
-    var money = inkMoney + tongueMoney;
+    var money = inkMoney
 
     totalMoney = Math.round(money, 0);
 
 }).setFps(1);
 
 
+register("renderOverlay", () => {
 
-register("command", (x,y) => {
-    x = parseInt(x);
-    y = parseInt(y);
+    if(settings.moneyDisplay) {
 
-    updateDisplay(x, y);
-    ChatLib.chat("&aDisplay moved to: " + x + ", " + y);
+        const color = settings.moneyColor;
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-}).setName("moveDisplayMoney");
+        var money = "$" + totalMoney + " Per Hour";
 
-function updateDisplay(x, y) {
-    data.SCC.moneyX = x;
-    data.SCC.moneyY = y;
-    data.save();
-    display.setRenderLoc(x, y);
-};
+        Renderer.drawString(money, data.SCC.moneyX, data.SCC.moneyY, true);
+    }
 
+    if(movecounter.isOpen() && settings.moneyDisplay) {
+        const color = settings.moneyColor;
 
+        Renderer.drawStringWithShadow(`x: ${Math.round(data.SCC.moneyX)}, y: ${Math.round(data.SCC.moneyY)}`, parseInt(data.SCC.moneyX) - 65, parseInt(data.SCC.moneyY) - 12)
 
-register("tick", () => {
-
-    if(!value==0) return;
-
-    var money = new DisplayLine(moneyColor + "$" + totalMoney + " Per Hour");
-
-    money.setShadow(moneyShadow);
-
-    display.setLine(0, money);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        var money = "$" + totalMoney + " Per Hour";
+        Renderer.drawString(money, data.SCC.moneyX, data.SCC.moneyY, true);
+    }
 
 });
 
