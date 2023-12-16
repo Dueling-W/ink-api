@@ -32,9 +32,101 @@ register("command", () => {
     ChatLib.chat("&9Use /movemoneydisplay to move the money display");
     ChatLib.chat("&9Use /inkGui to open a GUI of ink related stats");
     ChatLib.chat("&9Use /scGui to open a GUI of sea creature related stats");
+    ChatLib.chat("&9Use /setInk (value) to set your overall ink collection");
+    ChatLib.chat("&9Use /setSquid (value) to set your overall squid kills");
+    ChatLib.chat("&9Use /setNightSquid (value) to set your overall night squid kills");
+    ChatLib.chat("&9Use /setSC (value) to set your total sea creature kills");
+    ChatLib.chat("&9Use /setEmp (value) to set your total sea emperor kills");
+    ChatLib.chat("&9Use /setHydra (value) to set your total water hydra kills");
+    ChatLib.chat("&9Use /setMoo (value) to set your total agarimoo kills");
+    ChatLib.chat("&9Use /setCarrot (value) to set your total carrot king kills");
+    ChatLib.chat("&9Note: all /set commands require /ct load to update")
 
 }).setName("inkCommands").setAliases("inkHelp");
 
+
+//========SET HISTORICAL VALUES========
+//
+//
+//
+
+register("command", (x) => {
+
+
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.inkAmount = x;
+    data.save();
+
+}).setName("setInk");
+
+register("command", (x) => {
+
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.squidAmount = x;
+    data.save();
+    
+}).setName("setSquid");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.nightSquidCaught = x;
+    data.save();
+    
+}).setName("setNightSquid");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.ttlSCC = x;
+    data.save();
+    
+}).setName("setSC");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.emp = x;
+    data.save();
+    
+}).setName("setEmp");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.hydra = x;
+    data.save();
+    
+}).setName("setHydra");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.moo = x;
+    data.save();
+    
+}).setName("setMoo");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.carrot = x;
+    data.save();
+    
+}).setName("setCarrot");
 
 
 //========SET LOOTING========
@@ -63,6 +155,7 @@ register("command", (x) => {
         ChatLib.chat("&bInvalid looting value of " + x + " entered. Please enter either looting 4 or 5.");
     }
 }).setName("looting");
+
 
 
 
