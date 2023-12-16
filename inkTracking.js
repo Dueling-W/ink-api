@@ -1,4 +1,5 @@
 import { data } from "./utils"
+import settings from "./settings"
 
 
 //========SET INITIAL VALUES========
@@ -6,7 +7,7 @@ import { data } from "./utils"
 //
 //
 
-//local dic
+//session stats
 let localINK = {
     squidAmount: 0,
     inkAmount: 0,
@@ -15,17 +16,10 @@ let localINK = {
     inkPerHour: 0
 };
 
-var display = new Display();
+var movecounter = new Gui();
 var gui = new Gui();
-display.setBackground("none");
-display.setRenderLoc(data.INK.x, data.INK.y);
-
-const inkColor = data.CONFIG.inkColor;
 const inkShadow = data.CONFIG.inkShadow;
-
-var value = -1;
 var dh = -1;
-var timeTF = -1;
 
 
 //initial rounding
@@ -39,7 +33,7 @@ minutes = Math.round(minutes, 1);
 var inkRound = Math.round(data.INK.inkAmount, 0);
 
 
-//set titles
+//global strings
 var inkTitle2 = "==Ink Info Display!==";
 var inkGained = "Ink Gained: " + inkValue;
 var squidTitle = "Squids Caught: " + squidAmount;
@@ -51,121 +45,43 @@ var totalInkTitle = "Total Ink Gained: " + inkRound;
 var totalSquidsTitle = "Total Squids Caught: " + data.INK.squidAmount;
 var totalNightSquidsTitle = "Total Night Squids Caught: " + data.INK.nightSquidCaught;
 
-
-//set display line objects
-var title = setTitle(inkTitle2, inkColor, inkShadow);
-var ink = setTitle(inkGained, inkColor, inkShadow);
-var squid = setTitle(squidTitle, inkColor, inkShadow);
-var nightSquid = setTitle(nightTitle, inkColor, inkShadow);
-var perHour = setTitle(perHourTitle, inkColor, inkShadow);
-var minute = setTitle(minuteTitle, inkColor, inkShadow);
-var minutes2 = setTitle(minutesTitle, inkColor, inkShadow);
-var ink2 = setTitle(totalInkTitle, inkColor, inkShadow);
-var squid2 = setTitle(totalSquidsTitle, inkColor, inkShadow);
-var night2 = setTitle(totalNightSquidsTitle, inkColor, inkShadow);
-
-
-
-
-//========START AND STOP INK TRACKING========
+//========MOVE MAIN DISPLAY========
 //
 //
 //
 
-register("command", startTracking).setName("inkGo");
-register("command", stopTracking).setName("inkStop");
+register("dragged", (dx, dy, x, y) => {
+    if (!movecounter.isOpen()) return
+    data.INK.x = x
+    data.INK.y = y
+    data.save()
+});
 
-function startTracking() {
-    ChatLib.chat("Now Tracking Squids and Ink!!");
-    value = 0;
-
-    //show display
-    display.show();
-}
-
-function stopTracking() {
-    ChatLib.chat("Squid and Ink Tracking Stopped.");
-    display.hide();
-    value = -1;
-}
+register("command", () => {
+    movecounter.open()
+}).setName("moveinkdisplay");
 
 
-//========SET LOOTING========
+
+//========MOVE GUI========
 //
 //
 //
+register("dragged", (dx, dy, x, y) => {
+    if (!gui.isOpen()) return
+    data.INK.xgui = x
+    data.INK.ygui = y
+    data.save()
+});
 
-register("command", (x) => {
-
-    x = parseInt(x);
-
-    if(x==4){
-        data.INK.looting = 4;
-        data.INK.squidInkNum = 8;
-        data.INK.nightSquidInkNum = 36.8;
-        data.SCC.mooDrop = 4.8;
-        data.save();
-        ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
-    } else if(x == 5) {
-        data.INK.looting = 5;
-        data.INK.squidInkNum =8.75;
-        data.INK.nightSquidInkNum = 40;
-        data.SCC.mooDrop = 5.25;
-        data.save();
-        ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
-    } else {
-        ChatLib.chat("&bInvalid looting value of " + x + " entered. Please enter either looting 4 or 5.");
-    }
-}).setName("looting");
-
-
-
-//========SESSION TIMER========
-//
-//
-//
-
-register("command", (message) =>{
-
-    if(message.toLowerCase() == "start") {
-        ChatLib.chat("&bTimer and ink per hour calculations started!");
-        timeTF = 0;
-    } else if(message.toLowerCase() == "stop") {
-        ChatLib.chat("&bTimer and ink per hour calculations stopped!");
-        timeTF = -1;
-    } else {
-        ChatLib.chat("&bInvalid condition of " + message + " entered. Please enter either start or stop.");
-    }
-
-}).setName("inkTimer");
+register("command", () => {
+    gui.open()
+}).setName("inkGui");
 
 
 
 
-//========MOVE DISPLAY========
-//
-//
-//
-
-register("command", (x,y) => {
-    x = parseInt(x);
-    y = parseInt(y);
-
-    updateDisplay(x, y);
-    ChatLib.chat("&aDisplay moved to: " + x + ", " + y);
-
-}).setName("moveDisplayINK");
-
-
-function updateDisplay(x, y) {
-    data.INK.x = x;
-    data.INK.y = y;
-    data.save();
-    display.setRenderLoc(x, y);
-}
-
-
-//========DOUBLE HOOK========
+//========DOUBLE HOOK CON========
 //
 //
 //
@@ -182,15 +98,12 @@ register("chat", () => {
 
 
 
-
-
 //========TRACK SQUIDS AND NIGHT SQUIDS========
 //
 //
 //
 
 register("chat", () => {
-    if(!value==0) return;
 
     if(dh ==0) {
         localINK.squidAmount += 2;
@@ -212,7 +125,6 @@ register("chat", () => {
 }).setCriteria("A Squid appeared.");
 
 register("chat", () => {
-    if(!value==0)return;
 
     if(dh==0) {
         localINK.nightSquidCaught += 2;
@@ -236,7 +148,6 @@ register("chat", () => {
 
 
 
-
 //========CALC INK PER HOUR========
 //
 //
@@ -244,7 +155,7 @@ register("chat", () => {
 
 var tempInk = 0;
 register("step", () => {
-    if(!timeTF==0) return;
+    if(!settings.inkTimer) return;
     localINK.timeElap += 1
 
     tempInk = (localINK.inkAmount) / (localINK.timeElap);
@@ -255,6 +166,14 @@ register("step", () => {
 }).setFps(1);
 
 
+
+
+
+
+//========RENDER ALL DISPLAYS========
+//
+//
+//
 
 register("step", () => {
 
@@ -281,56 +200,96 @@ register("step", () => {
     totalSquidsTitle = "Total Squids Caught: " + data.INK.squidAmount;
     totalNightSquidsTitle = "Total Night Squids Caught: " + data.INK.nightSquidCaught;
 
-
-    //set display line objects
-    title = setTitle(inkTitle2, inkColor, inkShadow);
-    ink = setTitle(inkGained, inkColor, inkShadow);
-    squid = setTitle(squidTitle, inkColor, inkShadow);
-    nightSquid = setTitle(nightTitle, inkColor, inkShadow);
-    perHour = setTitle(perHourTitle, inkColor, inkShadow);
-    minute = setTitle(minuteTitle, inkColor, inkShadow);
-    minutes2 = setTitle(minutesTitle, inkColor, inkShadow);
-    ink2 = setTitle(totalInkTitle, inkColor, inkShadow);
-    squid2 = setTitle(totalSquidsTitle, inkColor, inkShadow);
-    night2 = setTitle(totalNightSquidsTitle, inkColor, inkShadow);
-
-
-
-}).setFps(1);
-
-
-
-
-//========RENDER DISPLAY========
-//
-//
-//
-register ("tick", () => {
-    if(!value==0) return;
-
-    //set color and shadow for all lines
-    display.setLine(0, title);
-    display.setLine(1, ink);
-    display.setLine(2, squid);
-    display.setLine(3, nightSquid);
-    display.setLine(4, perHour);
-
-    if(minutes <=1) {
-        display.setLine(5, minute);
-    } else {
-        display.setLine(5, minutes2)
-    }
-
-    display.setLine(6, ink2);
-    display.setLine(7, squid2);
-    display.setLine(8, night2);
 });
 
 
-//set shadow, color function
-function setTitle(words, color, shadow) {
+register ("renderOverlay", () => {
+    if(settings.inkDisplay) {
+    const color = settings.inkColor;
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-    const word = new DisplayLine(color + words);
-    word.setShadow(shadow);
-    return word;
-};
+    Renderer.drawString(inkTitle2, data.INK.x, data.INK.y, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(inkGained, data.INK.x, data.INK.y+10, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(squidTitle, data.INK.x, data.INK.y+20, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(nightTitle, data.INK.x, data.INK.y+30, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(perHourTitle, data.INK.x, data.INK.y+40, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+    if(minutes <=1) {
+        Renderer.drawString(minuteTitle, data.INK.x, data.INK.y+50, true);
+    } else {
+        Renderer.drawString(minutesTitle, data.INK.x, data.INK.y+50, true);
+    }
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(totalInkTitle, data.INK.x, data.INK.y+60, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(totalSquidsTitle, data.INK.x, data.INK.y+70, true);
+    Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    Renderer.drawString(totalNightSquidsTitle, data.INK.x, data.INK.y+80, true);
+
+    }
+
+    if (movecounter.isOpen() && settings.inkDisplay) {
+        const color = settings.inkColor
+
+        Renderer.drawStringWithShadow(`x: ${Math.round(data.INK.x)}, y: ${Math.round(data.INK.y)}`, parseInt(data.INK.x) - 65, parseInt(data.INK.y) - 12)
+       
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(inkTitle2, data.INK.x, data.INK.y, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(inkGained, data.INK.x, data.INK.y+10, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(squidTitle, data.INK.x, data.INK.y+20, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(nightTitle, data.INK.x, data.INK.y+30, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(perHourTitle, data.INK.x, data.INK.y+40, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    
+        if(minutes <=1) {
+            Renderer.drawString(minuteTitle, data.INK.x, data.INK.y+50, true);
+        } else {
+            Renderer.drawString(minutesTitle, data.INK.x, data.INK.y+50, true);
+        }
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalInkTitle, data.INK.x, data.INK.y+60, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalSquidsTitle, data.INK.x, data.INK.y+70, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalNightSquidsTitle, data.INK.x, data.INK.y+80, true);
+    }
+
+
+
+    if (gui.isOpen()) {
+        const color = settings.inkColor
+       
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(inkTitle2, data.INK.xgui, data.INK.ygui, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(inkGained, data.INK.xgui, data.INK.ygui+10, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(squidTitle, data.INK.xgui, data.INK.ygui+20, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(nightTitle, data.INK.xgui, data.INK.ygui+30, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(perHourTitle, data.INK.xgui, data.INK.ygui+40, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    
+        if(minutes <=1) {
+            Renderer.drawString(minuteTitle, data.INK.xgui, data.INK.ygui+50, true);
+        } else {
+            Renderer.drawString(minutesTitle, data.INK.xgui, data.INK.ygui+50, true);
+        }
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalInkTitle, data.INK.xgui, data.INK.ygui+60, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalSquidsTitle, data.INK.xgui, data.INK.ygui+70, true);
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        Renderer.drawString(totalNightSquidsTitle, data.INK.xgui, data.INK.ygui+80, true);
+    }
+});
