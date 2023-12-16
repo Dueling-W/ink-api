@@ -57,7 +57,10 @@ register("renderOverlay", () => {
         const color = settings.moneyColor;
         Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-        var money = "$" + totalMoney + " Per Hour";
+        let moneyStr = numberWithCommas(totalMoney)
+
+        var money = "$" + moneyStr + " Per Hour";
+
 
         Renderer.drawString(money, data.SCC.moneyX, data.SCC.moneyY, true);
     }
@@ -75,7 +78,9 @@ register("renderOverlay", () => {
 });
 
 
-
+function numberWithCommas(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 
 
 
