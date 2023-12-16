@@ -1,21 +1,32 @@
 {
     "INK": {
-        "squidAmount": 0,
-        "inkAmount": 0,
-        "nightSquidCaught": 0,
-        "x": 10,
-        "y": 10,
+        "squidAmount": 226738,
+        "inkAmount": 4388195,
+        "nightSquidCaught": 70436,
+        "x": 5,
+        "y": 34.535186767578125,
         "looting": 5,
         "squidInkNum": 8.75,
-        "nightSquidInkNum": 40
+        "nightSquidInkNum": 40,
+        "inkPerHour": 30600,
+        "xgui": 414,
+        "ygui": 178.67788696289062
     },
     "SCC": {
-        "ttlSCC": 0,
-        "emp": 0,
-        "hydra": 0,
-        "x": 10,
-        "y": 110,
-        "empTime": 0
+        "ttlSCC": 607862,
+        "emp": 481,
+        "hydra": 1936,
+        "x": 778,
+        "y": 327.8255615234375,
+        "empTime": 4054,
+        "moo": 2223,
+        "carrot": 1790,
+        "mooDrop": 5.25,
+        "moneyX": 851,
+        "moneyY": 149.649169921875,
+        "tongue": 5.25,
+        "xgui": 381.5,
+        "ygui": 43.544097900390625
     },
     "CONFIG": {
         "sccColor": "&6",
