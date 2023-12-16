@@ -30,6 +30,13 @@ export let data = new PogObject("InkUtilities", {
         "xgui": 0,
         "ygui": 0
     },
+
+    "EVENT": {
+        "grim": 0,
+        "sccGrim": 0,
+        "phantom": 0,
+        "sccPhantom": 0
+    },
     "CONFIG": {
         "inkColor": "&b",
         "sccColor": "&4",
