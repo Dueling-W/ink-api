@@ -9,7 +9,10 @@ export let data = new PogObject("InkUtilities", {
         "y": 150,
         "looting": 5,
         "squidInkNum": 8.75,
-        "nightSquidInkNum": 40
+        "nightSquidInkNum": 40,
+        "inkPerHour": 0,
+        "xgui": 50,
+        "ygui": 50
     },
     "SCC": {
         "ttlSCC": 0,
@@ -17,9 +20,17 @@ export let data = new PogObject("InkUtilities", {
         "hydra": 0,
         "x": 0,
         "y": 0,
-        "empTime": 0
+        "empTime": 0,
+        "moo": 0,
+        "carrot": 0,
+        "mooDrop": 0,
+        "moneyX": 0,
+        "moneyY": 0,
+        "tongue": 0,
+        "xgui": 0,
+        "ygui": 0
     },
-     "CONFIG": {
+    "CONFIG": {
         "inkColor": "&b",
         "sccColor": "&4",
         "moneyColor": "&2",
