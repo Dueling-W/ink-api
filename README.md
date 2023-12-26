@@ -2,7 +2,7 @@
 
 ### **Description**
 
-Continously developed fishing mod for Hypixel Skyblock! Mainly focused on water fishing and ink fishing. Please submit all bug reports and feature suggestions to #lowbudget on Discord, you can also find me under the name "Dueling Charges" on the Discord Server [Shrimple](https://discord.gg/tJu2n6tT)
+Continously developed fishing mod for Hypixel Skyblock! Mainly focused on water fishing and ink fishing. Please submit all bug reports and feature suggestions to #lowbudget on Discord, you can also find me under the name "DuelingCharges" on the Discord Server [Shrimple](https://discord.gg/tJu2n6tT)
 ***
 
 ### **Current Features**
