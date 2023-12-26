@@ -13,7 +13,7 @@ import {
 
 @Vigilant("InkUtilities", "InkUtilities", {
     getCategoryComparator: () => (a, b) => {
-        const categories = ["Information", "Inking", "Sea Creatures", "Money Per Hour"];
+        const categories = ["Information", "Inking", "Sea Creatures", "Money Per Hour", "Bestiary"];
         return categories.indexOf(a.name) - categories.indexOf(b.name);
     }
 })
@@ -60,6 +60,13 @@ class Settings {
 //
 
     @SwitchProperty({
+        name: "Track Ink Stats",
+        description: "Start tracking ink stats!",
+        category: "Inking"
+    })
+    trackInk = false;
+
+    @SwitchProperty({
         name: "Ink Display",
         description: "Turn on the ink display!",
         category: "Inking"
@@ -85,6 +92,13 @@ class Settings {
 //
 //
 //
+
+    @SwitchProperty({
+        name: "Track Sea Creatures",
+        description: "Start tracking sea creatures!",
+        category: "Sea Creatures"
+    })
+    trackSC = false;
 
     @SwitchProperty({
         name: "Sea Creature Display",
@@ -126,6 +140,50 @@ class Settings {
         category: "Money Per Hour"
     })
     moneyColor = Color.BLUE;
+
+
+
+
+
+//========Bestiary========
+//
+//
+//
+
+    @SwitchProperty({
+        name: "General Bestiary Toggle",
+        description: "Start tracking all water bestiaries!",
+        category: "Bestiary"
+    })
+    bestTrack = false;
+
+    @SwitchProperty({
+        name: "Oasis Display",
+        description: "Turn on the oasis fishing display!",
+        category: "Bestiary"
+    })
+    oasisDisplay = false;
+
+    @ColorProperty({
+        name: "Oasis Display Color",
+        description: "Pick a color for the oasis display!",
+        category: "Bestiary"
+    })
+    oasisColor = Color.BLUE;
+
+    @SwitchProperty({
+        name: "Crystal Hollows Display",
+        description: "Turn on the crystal hollows display!",
+        category: "Bestiary"
+    })
+    hollowsDisplay = false;
+
+    @ColorProperty({
+        name: "Crystal Hollows Display Color",
+        description: "Pick a color for the crystal hollows display!",
+        category: "Bestiary"
+    })
+    hollowsColor = Color.BLUE;
 
 
 }
