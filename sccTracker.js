@@ -21,8 +21,11 @@ const sccShadow = data.CONFIG.sccShadow;
 var dh = -1;
 
 //All chats for water sea creatures
-const waterCreatures = /^(A Squid appeared\.|You caught a Sea Walker\.|Pitch darkness reveals a Night Squid\.|You stumbled upon a Sea Guardian\.|It looks like you've disrupted the Sea Witch's brewing session. Watch out, she's furious\!|You reeled in a Sea Archer\.|The Rider of the Deep has emerged\.|Huh\? A Catfish\!|Is this even a fish\? It's the Carrot King\!|Gross! A Sea Leech\!|You've discovered a Guardian Defender of the sea\.|You have awoken the Deep Sea Protector, prepare for a battle\!|The Water Hydra has come to test your strength\.|Sea Emperor arises from the depths\.|Your Chumcap Bucket trembles, it's an Agarimoo\.)$/;
+const waterCreatures = /^(You caught a Sea Walker\.|You stumbled upon a Sea Guardian\.|It looks like you've disrupted the Sea Witch's brewing session. Watch out, she's furious\!|You reeled in a Sea Archer\.|The Rider of the Deep has emerged\.|Huh\? A Catfish\!|Gross! A Sea Leech\!|You've discovered a Guardian Defender of the sea\.|You have awoken the Deep Sea Protector, prepare for a battle\!)$/;
 
+const squids = /^(A Squid appeared\.|Pitch darkness reveals a Night Squid\.)$/;
+
+const bestiary = /^(An Oasis Rabbit appears from the water\.|An Oasis Sheep appears from the water\.|A Water Worm surfaces\!|A Poisoned Water Worm surfaces\!|A Zombie Miner surfaces\!)$/;
 
 
 //calc minutes
@@ -82,15 +85,14 @@ register("command", () => {
 //
 
 register("chat", () => {
-    dh = 0;
+    data.SCC.dh = 0;
 
 }).setCriteria("It's a Double Hook!");
 
 register("chat", () => {
-    dh = 0;
+    data.SCC.dh = 0;
 
 }).setCriteria("It's a Double Hook! Woot woot!");
-
 
 
 
@@ -103,17 +105,23 @@ register("chat", () => {
 //emp
 register("chat", () => {
 
-    if(dh == 0) {
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
         localSCC.sesEmp += 2;
+        localSCC.sesSCC += 2;
+        data.SCC.ttlSCC += 2;
         data.SCC.emp += 2;
         data.SCC.empTime = 0;
-        dh = -1;
+        data.SCC.dh = -1;
         data.save();
     } else {
+        localSCC.sesSCC += 1;
+        data.SCC.ttlSCC += 1;
         localSCC.sesEmp += 1;
         data.SCC.emp += 1;
         data.SCC.empTime = 0;
-        dh = -1;
+        data.SCC.dh = -1;
         data.save();
     }
 
@@ -123,15 +131,21 @@ register("chat", () => {
 //hydra
 register("chat", () => {
 
-    if(dh == 0) {
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
         localSCC.sesHydra += 2;
         data.SCC.hydra += 2;
-        dh = -1;
+        data.SCC.dh = -1;
+        localSCC.sesSCC += 2;
+        data.SCC.ttlSCC += 2;
         data.save();
     } else {
+        localSCC.sesSCC += 1;
+        data.SCC.ttlSCC += 1;
         localSCC.sesHydra += 1;
         data.SCC.hydra += 1;
-        dh = -1;
+        data.SCC.dh = -1;
         data.save();
     }
 
@@ -140,18 +154,22 @@ register("chat", () => {
 //moo
 register("chat", () => {
 
-    if(dh == 0) {
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
         localSCC.sesMoo += 2;
         data.SCC.moo += 2;
-        dh = -1;
+        data.SCC.dh = -1;
+        localSCC.sesSCC += 2;
+        data.SCC.ttlSCC += 2;
         data.save();
-        data.SCC.tongue += ((data.SCC.mooDrop) *2);
     } else {
         localSCC.sesMoo += 1;
         data.SCC.moo += 1;
-        dh = -1;
+        data.SCC.dh = -1;
+        localSCC.sesSCC += 1;
+        data.SCC.ttlSCC += 1;
         data.save();
-        data.SCC.tongue += (data.SCC.mooDrop);
     }
 
 }).setCriteria("Your Chumcap Bucket trembles, it's an Agarimoo.");
@@ -160,15 +178,21 @@ register("chat", () => {
 //carrot
 register("chat", () => {
 
-    if(dh == 0) {
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
         localSCC.sesCarrot += 2;
         data.SCC.carrot += 2;
-        dh = -1;
+        localSCC.sesSCC += 2;
+        data.SCC.ttlSCC += 2;
+        data.SCC.dh = -1;
         data.save();
     } else {
         localSCC.sesCarrot += 1;
         data.SCC.carrot += 1;
-        dh = -1;
+        data.SCC.dh = -1;
+        localSCC.sesSCC += 1;
+        data.SCC.ttlSCC += 1;
         data.save();
     }
 
@@ -178,19 +202,47 @@ register("chat", () => {
 //all
 register("chat", () => {
 
-    if(dh == 0) {
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
         localSCC.sesSCC += 2;
         data.SCC.ttlSCC += 2;
-        dh = -1;
+        data.SCC.dh = -1;
         data.save();
     } else {
         localSCC.sesSCC += 1;
         data.SCC.ttlSCC += 1;
-        dh = -1;
+        data.SCC.dh = -1;
         data.save();
     }
 
 }).setCriteria(waterCreatures)
+
+//all
+register("chat", () => {
+
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
+        localSCC.sesSCC += 2;
+    } else {
+        localSCC.sesSCC += 1;
+    }
+
+}).setCriteria(squids)
+
+//all
+register("chat", () => {
+
+    if(!settings.trackSC) return;
+
+    if(data.SCC.dh == 0) {
+        localSCC.sesSCC += 2;
+    } else {
+        localSCC.sesSCC += 1;
+    }
+
+}).setCriteria(bestiary)
 
 
 //Time since emp tracker
@@ -356,3 +408,50 @@ register ("renderOverlay", () => {
     }
 
 });
+
+
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.ttlSCC = x;
+    data.save();
+    
+}).setName("setSC");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.emp = x;
+    data.save();
+    
+}).setName("setEmp");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.hydra = x;
+    data.save();
+    
+}).setName("setHydra");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.moo = x;
+    data.save();
+    
+}).setName("setMoo");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+    data.SCC.carrot = x;
+    data.save();
+    
+}).setName("setCarrot");
