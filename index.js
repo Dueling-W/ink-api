@@ -4,6 +4,7 @@
 import "./inkTracking.js"
 import "./sccTracker.js"
 import "./apiCalls.js"
+import "./bestiary.js"
 import {data} from "./utils.js"
 import settings from "./settings"
 
@@ -30,6 +31,7 @@ register("command", () => {
     ChatLib.chat("&9Use /moveinkdisplay to move the ink display (display needs to be open)");
     ChatLib.chat("&9Use /movescdisplay to move the sea creature display");
     ChatLib.chat("&9Use /movemoneydisplay to move the money display");
+    ChatLib.chat("&9Use /movebestdisplay to move the bestiary display");
     ChatLib.chat("&9Use /inkGui to open a GUI of ink related stats");
     ChatLib.chat("&9Use /scGui to open a GUI of sea creature related stats");
     ChatLib.chat("&9Use /setInk (value) to set your overall ink collection");
@@ -40,93 +42,15 @@ register("command", () => {
     ChatLib.chat("&9Use /setHydra (value) to set your total water hydra kills");
     ChatLib.chat("&9Use /setMoo (value) to set your total agarimoo kills");
     ChatLib.chat("&9Use /setCarrot (value) to set your total carrot king kills");
+    ChatLib.chat("&9Use /setRabbit (value) to set your total oasis rabbit kills");
+    ChatLib.chat("&9Use /setSheep (value) to set your total oasis sheep kills");
+    ChatLib.chat("&9Use /setWorm (value) to set your total water worm kills");
+    ChatLib.chat("&9Use /setPoisonWorm (value) to set your total poisoned water worm kills");
+    ChatLib.chat("&9Use /setZombie (value) to set your total zombie miner kills");
     ChatLib.chat("&9Note: all /set commands require /ct load to update")
 
 }).setName("inkCommands").setAliases("inkHelp");
 
-
-//========SET HISTORICAL VALUES========
-//
-//
-//
-
-register("command", (x) => {
-
-
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-
-    data.INK.inkAmount = x;
-    data.save();
-
-}).setName("setInk");
-
-register("command", (x) => {
-
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-
-    data.INK.squidAmount = x;
-    data.save();
-    
-}).setName("setSquid");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-
-    data.INK.nightSquidCaught = x;
-    data.save();
-    
-}).setName("setNightSquid");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-    data.SCC.ttlSCC = x;
-    data.save();
-    
-}).setName("setSC");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-    data.SCC.emp = x;
-    data.save();
-    
-}).setName("setEmp");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-    data.SCC.hydra = x;
-    data.save();
-    
-}).setName("setHydra");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-    data.SCC.moo = x;
-    data.save();
-    
-}).setName("setMoo");
-
-register("command", (x) => {
-    x = parseInt(x);
-
-    ChatLib.chat("Set to " + x);
-    data.SCC.carrot = x;
-    data.save();
-    
-}).setName("setCarrot");
 
 
 //========SET LOOTING========
