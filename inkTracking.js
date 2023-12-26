@@ -19,7 +19,6 @@ let localINK = {
 var movecounter = new Gui();
 var gui = new Gui();
 const inkShadow = data.CONFIG.inkShadow;
-var dh = -1;
 
 
 //initial rounding
@@ -87,12 +86,12 @@ register("command", () => {
 //
 
 register("chat", () => {
-    dh = 0;
+    data.SCC.dh = 0;
 
 }).setCriteria("It's a Double Hook!");
 
 register("chat", () => {
-    dh = 0;
+    data.SCC.dh = 0;
 
 }).setCriteria("It's a Double Hook! Woot woot!");
 
@@ -105,20 +104,24 @@ register("chat", () => {
 
 register("chat", () => {
 
-    if(dh ==0) {
+    if(!settings.trackInk) return;
+
+    if(data.SCC.dh ==0) {
         localINK.squidAmount += 2;
         localINK.inkAmount += ((data.INK.squidInkNum)*2);
         data.INK.squidAmount += 2;
         data.INK.inkAmount += ((data.INK.squidInkNum)*2);
+        data.SCC.dh = -1;
+        data.SCC.ttlSCC += 2;
         data.save();
-        dh = -1
     } else {
         localINK.squidAmount += 1;
         localINK.inkAmount += ((data.INK.squidInkNum));
         data.INK.squidAmount += 1;
         data.INK.inkAmount += ((data.INK.squidInkNum));
+        data.SCC.dh = -1;
+        data.SCC.ttlSCC += 1;
         data.save();
-        dh = -1
 
     }
 
@@ -126,20 +129,24 @@ register("chat", () => {
 
 register("chat", () => {
 
-    if(dh==0) {
+    if(!settings.trackInk) return;
+
+    if(data.SCC.dh==0) {
         localINK.nightSquidCaught += 2;
         localINK.inkAmount += ((data.INK.nightSquidInkNum)*2);
         data.INK.nightSquidCaught += 2;
         data.INK.inkAmount += ((data.INK.nightSquidInkNum)*2);
+        data.SCC.dh = -1;
+        data.SCC.ttlSCC += 2;
         data.save();
-        dh = -1
     } else {
         localINK.nightSquidCaught += 1;
         localINK.inkAmount += ((data.INK.nightSquidInkNum));
         data.INK.nightSquidCaught += 1;
         data.INK.inkAmount += ((data.INK.nightSquidInkNum));
+        data.SCC.dh = -1;
+        data.SCC.ttlSCC += 1;
         data.save();
-        dh = -1
     }
 
 
@@ -220,8 +227,10 @@ register ("renderOverlay", () => {
     Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
     if(minutes <=1) {
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         Renderer.drawString(minuteTitle, data.INK.x, data.INK.y+50, true);
     } else {
+        Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
         Renderer.drawString(minutesTitle, data.INK.x, data.INK.y+50, true);
     }
     Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -251,8 +260,10 @@ register ("renderOverlay", () => {
         Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     
         if(minutes <=1) {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
             Renderer.drawString(minuteTitle, data.INK.x, data.INK.y+50, true);
         } else {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
             Renderer.drawString(minutesTitle, data.INK.x, data.INK.y+50, true);
         }
         Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -281,8 +292,10 @@ register ("renderOverlay", () => {
         Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
     
         if(minutes <=1) {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
             Renderer.drawString(minuteTitle, data.INK.xgui, data.INK.ygui+50, true);
         } else {
+            Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
             Renderer.drawString(minutesTitle, data.INK.xgui, data.INK.ygui+50, true);
         }
         Renderer.colorize(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -293,3 +306,37 @@ register ("renderOverlay", () => {
         Renderer.drawString(totalNightSquidsTitle, data.INK.xgui, data.INK.ygui+80, true);
     }
 });
+
+
+register("command", (x) => {
+
+
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.inkAmount = x;
+    data.save();
+
+}).setName("setInk");
+
+register("command", (x) => {
+
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.squidAmount = x;
+    data.save();
+    
+}).setName("setSquid");
+
+register("command", (x) => {
+    x = parseInt(x);
+
+    ChatLib.chat("Set to " + x);
+
+    data.INK.nightSquidCaught = x;
+    data.save();
+    
+}).setName("setNightSquid");
