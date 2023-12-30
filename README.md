@@ -21,7 +21,7 @@ This is ChatTriggers mod, however due to their verification process, the version
 2. Drop the executable file in your mods folder at the following path: %appdata%/.minecraft/mods
 3. To install properly, unzip the folder so you have the InkUtilities folder.
 4. Perform the keyboard shortcut Win+R and copy and paste this path: %appdata%/.minecraft/config/ChatTriggers/modules
-5. Simply drop the InkUtilities folder inside and you are all set!
+5. Simply drop the InkUtilities folder, not the zip file, inside and you are all set!
 ***
 
 ### **Shoutouts**
