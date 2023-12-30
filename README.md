@@ -18,11 +18,8 @@ Continously developed fishing mod for Hypixel Skyblock! Mainly focused on water 
 ### **Install Guide**
 This is ChatTriggers mod, however due to their verification process, the version on the Git may be more up-to-date. The process for installing ChatTriggers modules is slightly different from conventional Forge mods.
 1. To install properly, unzip the folder so you have the InkUtilities folder.
-2. Perform the keyboard shortcut Win+R and copy and paste this path: %appdata%\.minecraft
-3. Click on the "config" folder.
-4. Once inside, click on the "ChatTriggers" folder.
-5. Then, click on the "modules" folder.
-6. Once inside the modules folder, simply drag and drop the InkUtilities folder inside and you will be all set!
+2. Perform the keyboard shortcut Win+R and copy and paste this path: %appdata%\.minecraft\config\ChatTriggers\modules
+3. Simple drop the InkUtilities folder inside and you are all set!
 ***
 
 ### **Shoutouts**
