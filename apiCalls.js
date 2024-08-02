@@ -3,7 +3,7 @@ import { data } from "./utils"
 import settings from "./settings"
 
 //call api
-const url = "https://api.hypixel.net/skyblock/bazaar";
+const url = "https://api.hypixel.net/v2/skyblock/bazaar";
 const result = FileLib.getUrlContent(url);
 const jsonObject = JSON.parse(result);
 
