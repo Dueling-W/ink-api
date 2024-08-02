@@ -12,7 +12,10 @@ export let data = new PogObject("InkUtilities", {
         "nightSquidInkNum": 40,
         "inkPerHour": 0,
         "xgui": 150,
-        "ygui": 150
+        "ygui": 150,
+        "xgoal": 100,
+        "ygoal": 100,
+        "dh": -1
     },
     "SCC": {
         "ttlSCC": 0,
