@@ -1,7 +1,7 @@
 {
     "name": "InkUtilities",
     "creator": "DuelingCharges",
-    "description": "Run the command /ink to get started!",
+    "description": "Run the command /ink or /inkUtils to get started!",
     "version": "0.2.0",
     "entry": "index.js",
     "requires": [

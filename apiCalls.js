@@ -1,4 +1,3 @@
-//import localSCC from "./sccTracker.js"
 import { data } from "./utils"
 import settings from "./settings"
 
@@ -40,6 +39,7 @@ register("step", () => {
     if(!settings.moneyDisplay) return;
 
     const inkPrice = jsonObject.products.INK_SACK.quick_status.buyPrice;
+    
 
 
     var inkMoney = (inkPrice) * (data.INK.inkPerHour);
@@ -47,7 +47,7 @@ register("step", () => {
 
     totalMoney = Math.round(money, 0);
 
-}).setFps(1);
+}).setDelay(5);
 
 
 register("renderOverlay", () => {

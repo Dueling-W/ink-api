@@ -38,20 +38,6 @@ register("command", () => {
 
 
 
-//========DH CONDITIONS========
-//
-//
-//
-
-register("chat", () => {
-    data.SCC.dh = 0;
-
-}).setCriteria("It's a Double Hook!");
-
-register("chat", () => {
-    data.SCC.dh = 0;
-
-}).setCriteria("It's a Double Hook! Woot woot!");
 
 
 register("command", (x) => {
@@ -62,7 +48,7 @@ register("command", (x) => {
     data.BEST.rabbit += x;
     data.save();
     
-}).setName("setRabbit");
+}).setName("setrabbit");
 
 register("command", (x) => {
     x = parseInt(x);
@@ -72,7 +58,7 @@ register("command", (x) => {
     data.BEST.sheep += x;
     data.save();
     
-}).setName("setSheep");
+}).setName("setsheep");
 
 register("command", (x) => {
     x = parseInt(x);
@@ -81,7 +67,7 @@ register("command", (x) => {
     data.BEST.worm = x;
     data.save();
     
-}).setName("setWorm");
+}).setName("setworm");
 
 register("command", (x) => {
     x = parseInt(x);
@@ -90,7 +76,7 @@ register("command", (x) => {
     data.BEST.poisonWorm = x;
     data.save();
     
-}).setName("setPoisonWorm");
+}).setName("setpoisonWorm");
 
 register("command", (x) => {
     x = parseInt(x);
@@ -99,7 +85,7 @@ register("command", (x) => {
     data.BEST.zombie = x;
     data.save();
     
-}).setName("setZombie");
+}).setName("setminer");
 
 
 
@@ -111,15 +97,15 @@ register("chat", () => {
 
     if(!settings.bestTrack) return;
 
-    if(data.SCC.dh == 0) {
+    if(data.BEST.dh == 0) {
         data.BEST.rabbit += 2;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 2;
+        data.BEST.dh = -1;
         data.save();
     } else {
         data.BEST.rabbit += 1;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 1;
+        data.BEST.dh = -1;
         data.save();
     }
 
@@ -131,15 +117,15 @@ register("chat", () => {
     if(!settings.bestTrack) return;
 
 
-    if(data.SCC.dh == 0) {
+    if(data.BEST.dh == 0) {
         data.BEST.sheep += 2;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 2;
+        data.BEST.dh = -1;
         data.save();
     } else {
         data.BEST.sheep += 1;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 1;
+        data.BEST.dh = -1;
         data.save();
     }
 
@@ -152,15 +138,15 @@ register("chat", () => {
     if(!settings.bestTrack) return;
 
 
-    if(data.SCC.dh == 0) {
+    if(data.BEST.dh == 0) {
         data.BEST.worm += 2;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 2;
+        data.BEST.dh = -1;
         data.save();
     } else {
         data.BEST.worm += 1;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 1;
+        data.BEST.dh = -1;
         data.save();
     }
 
@@ -173,15 +159,15 @@ register("chat", () => {
     if(!settings.bestTrack) return;
 
 
-    if(data.SCC.dh == 0) {
+    if(data.BEST.dh == 0) {
         data.BEST.poisonWorm += 2;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 2;
+        data.BEST.dh = -1;
         data.save();
     } else {
         data.BEST.poisonWorm += 1;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 1;
+        data.BEST.dh = -1;
         data.save();
     }
 
@@ -193,15 +179,15 @@ register("chat", () => {
     if(!settings.bestTrack) return;
 
 
-    if(data.SCC.dh == 0) {
+    if(data.BEST.dh == 0) {
         data.BEST.zombie += 2;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 2;
+        data.BEST.dh = -1;
         data.save();
     } else {
         data.BEST.zombie += 1;
-        data.SCC.dh = -1;
         data.SCC.ttlSCC += 1;
+        data.BEST.dh = -1;
         data.save();
     }
 
@@ -209,6 +195,8 @@ register("chat", () => {
 
 
 register("step", () => {
+
+    if(!settings.bestTrack) return;
 
     oasisString = "==Oasis Display!==";
     rabbitString = "Oasis Rabbits Caught: " + data.BEST.rabbit + "/300";
@@ -227,6 +215,8 @@ register("step", () => {
 
 
 register ("renderOverlay", () => {
+
+    if(!settings.bestTrack) return;
 
 
     if(settings.oasisDisplay) {

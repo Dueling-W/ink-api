@@ -13,8 +13,8 @@ export let data = new PogObject("InkUtilities", {
         "inkPerHour": 0,
         "xgui": 150,
         "ygui": 150,
-        "xgoal": 100,
-        "ygoal": 100,
+        "xgoal": 150,
+        "ygoal": 150,
         "dh": -1
     },
     "SCC": {
@@ -41,13 +41,19 @@ export let data = new PogObject("InkUtilities", {
         "y": 150,
         "worm": 0,
         "poisonWorm": 0,
-        "zombie": 0
+        "zombie": 0,
+        "dh": -1
     },
-    "EVENT": {
+    "SPOOKY": {
         "grim": 0,
         "sccGrim": 0,
         "phantom": 0,
-        "sccPhantom": 0
+        "werewolf": 0,
+        "nightmare": 0,
+        "scarecrow": 0,
+        "x": 150,
+        "y": 150,
+        "dh": -1
     },
     "CONFIG": {
         "inkColor": "&b",
