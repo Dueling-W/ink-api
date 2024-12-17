@@ -26,3 +26,8 @@ This is ChatTriggers mod, however due to their verification process, the version
 ***
 
 ### **Shoutouts**
+- Eragon of NetherFishingUtils for debugging help
+- AliAddons module for help with Vigilance
+- Vigilance for providing the feature GUI
+- tawaru for helping with ink expectancy values
+- And of course everyone who downloads :smile:
