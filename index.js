@@ -1,13 +1,16 @@
 /// <reference types="../CTAutocomplete" />
 /// <reference lib="es2015" />
 
-import "./inkTracking.js"
-import "./sccTracker.js"
-import "./apiCalls.js"
-import "./bestiary.js"
-import "./spookyTracking.js"
-import {data} from "./utils.js"
-import settings from "./settings"
+import "./features/inkTracking.js"
+import "./features/sccTracker.js"
+import "./features/apiCalls.js"
+import "./features/bestiary.js"
+import "./features/spookyTracking.js"
+import "./features/inkAchievements.js"
+import "./utils/functions.js"
+import {data} from "./data/utils.js"
+import settings from "./data/settings"
+import "./data/constants.js"
 
 
 
@@ -21,8 +24,9 @@ if (settings.firstRun) {
     ChatLib.chat("&aThank you for Downloading &f&nInkUtilities!");
     ChatLib.chat("&aYou can open the settings using /ink | /inkUtils");
     ChatLib.chat("&aView all commands with /inkCommands | /inkHelp");
-    ChatLib.chat("&aPlease use a level 100 epic or legendary squid for accurate rates!");
-    ChatLib.chat("&aSet your looting enchant using /looting (4) or (5)!");
+    ChatLib.chat("&aMake sure to have the sacks message turned on!");
+    ChatLib.chat("&aView FAQ with /inkFAQ");
+
 }
 
 
@@ -30,23 +34,30 @@ if (settings.firstRun) {
 
 register("command", () => {
     ChatLib.chat("&b&l----------InkUtilities Commands----------");
-    ChatLib.chat("&aUse /moveinkdisplay to move the ink display (display needs to be open)");
-    ChatLib.chat("&aUse /movescdisplay to move the sea creature display");
-    ChatLib.chat("&aUse /movemoneydisplay to move the money display");
     ChatLib.chat("&aUse /movebestdisplay to move the bestiary display");
-    ChatLib.chat("&aUse /movespookydisplay to move the spooky display");
-    ChatLib.chat("&aUse /movegoaldisplay to move the ink goal display");
+    ChatLib.chat("&aUse /movespookydisplay to move the spooky display\n");
     ChatLib.chat("&aUse /inkGui to open a temporary GUI of ink related stats");
-    ChatLib.chat("&aUse /scGui to open a temporary GUI of sea creature related stats");
+    ChatLib.chat("&aUse /scGui to open a temporary GUI of sea creature related stats\ns");
     ChatLib.chat("&aUse /resetTimer to reset session timer");
     ChatLib.chat("&aUse /set(condition) (value) to set your lifestime fishing stats");
-    ChatLib.chat("&aValid conditions are: sc, emp, hydra, moo, carrot, ink, squid, nightSquid, rabbit, sheep, worm, poisonWorm, miner, scare, nightmare, werewolf, phantom, grim");
+    ChatLib.chat("&aValid conditions are: sc, emp, hydra, moo, carrot, rabbit, sheep, worm, poisonWorm, miner, scare, nightmare, werewolf, phantom, grim");
 
 }).setName("inkCommands").setAliases("inkHelp");
 
 
 
+register("command", () => {
 
+    ChatLib.chat("&b&l----------InkUtilities FAQ----------");
+    ChatLib.chat("&aIs the ink tracking accurate? - Yes, it uses the sack message, make sure to have it turned on.\n")
+    ChatLib.chat("&aHow to set my historical values? - Set ink-related ones through settings in the Ink section, set others using /setcommand (run /inkHelp for details).\n")
+    ChatLib.chat("&aIs Squid and Night Squid Bestiary? - Yes, it estimates your accurate bestiary through LOOT SHARE message, althought it could be slightly off.")
+    ChatLib.chat("&aThe rest of the mobs just count your catches, like Emps, Hydras, etc.\n")
+    ChatLib.chat("&aIs Squid and Night Squid Bestiary? - Yes, it estimates your accurate bestiary through LOOT SHARE message, althought it could be slightly off.\n")
+    ChatLib.chat("&aDo I get achievements when I update my ink, squid, and night squid data? - Yes, but you will only get a chat message for the highest one, although all will display as complete in the GUI.\n")
+    ChatLib.chat("&aI set my historical values but didn't get achievements! - This is intended, go fish for a tiny bit so everything updates.")
+
+}).setName("inkFAQ")
 
 
 
@@ -73,32 +84,6 @@ register("chat", (msg) => {
 
 }).setCriteria("From ${message}");
 
-
-
-
-//========SET LOOTING========
-register("command", (x) => {
-
-    x = parseInt(x);
-
-    if(x==4){
-        data.INK.looting = 4;
-        data.INK.squidInkNum = 8;
-        data.INK.nightSquidInkNum = 36.8;
-        data.SCC.mooDrop = 4.8;
-        data.save();
-        ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
-    } else if(x == 5) {
-        data.INK.looting = 5;
-        data.INK.squidInkNum =8.75;
-        data.INK.nightSquidInkNum = 40.0572;
-        data.SCC.mooDrop = 5.25;
-        data.save();
-        ChatLib.chat("&bYour looting enchant has been set to " + x + "!");
-    } else {
-        ChatLib.chat("&bInvalid looting value of " + x + " entered. Please enter either looting 4 or 5.");
-    }
-}).setName("looting");
 
 
 

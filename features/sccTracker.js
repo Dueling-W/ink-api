@@ -1,5 +1,6 @@
-import { data } from "./utils"
-import settings from "./settings"
+import {data} from "../data/utils.js"
+import settings from "../data/settings"
+import * as functions from "../utils/functions.js"
 
 
 //local dic
@@ -8,7 +9,12 @@ let localSCC = {
     sesEmp: 0,
     sesHydra: 0,
     sesMoo: 0,
-    sesCarrot: 0
+    sesCarrot: 0,
+    cloverDH: 0,
+    prevSesCarrot: 0,
+    nightStreak: 0,
+    squidStreak: 0,
+    carrotStreak: 0
 };
 
 var movecounter = new Gui();
@@ -42,6 +48,9 @@ var hydraString2 = "Total Hydras Caught: " + data.SCC.hydra;
 var empString2 = "Total Emps Caught: " + data.SCC.emp;
 var mooString2 = "Total Agarimoos Caught: " + data.SCC.moo;
 var carrotString2 = "Total Carrot Kings Caught: " + data.SCC.carrot;
+
+
+var cloverDrop = false;
 
 
 //===Move displays===
@@ -113,6 +122,64 @@ register("chat", (msg) => {
         data.save();
     }
 
+    if(msg=="Pitch darkness reveals a Night Squid.") {
+
+        localSCC.nightStreak += 1;
+
+        if(localSCC.nightStreak > data.INK.nightRecord) {
+            data.INK.nightRecord = localSCC.nightStreak;
+            data.save();
+        }
+
+        if(localSCC.nightStreak == 5) {
+            data.MENTS.night_5 = true;
+            data.save();
+        }
+
+
+    } else {
+        localSCC.nightStreak = 0;
+    }
+
+    if(msg=="A Squid appeared.") {
+
+        localSCC.squidStreak += 1;
+
+        if(localSCC.squidStreak > data.INK.squidRecord) {
+            data.INK.squidRecord = localSCC.squidStreak;
+            data.save();
+        }
+
+        if(localSCC.squidStreak == 10) {
+            data.MENTS.squid_10 = true;
+            data.save();
+        }
+
+
+    } else {
+        localSCC.squidStreak = 0;
+    }
+
+
+
+    if(msg=="Is this even a fish? It's the Carrot King!") {
+
+        localSCC.carrotStreak += 1;
+
+        if(localSCC.carrotStreak > data.SCC.carrotRecord) {
+            data.SCC.carrotRecord = localSCC.carrotStreak;
+            data.save();
+        }
+
+        if(localSCC.carrotStreak == 3) {
+            data.MENTS.b2b2b_king = true;
+            data.save();
+        }
+
+    } else {
+        localSCC.carrotStreak = 0;
+    }
+
 
 
     if(msg=="The Sea Emperor arises from the depths.") {
@@ -125,6 +192,7 @@ register("chat", (msg) => {
 
         if(data.SCC.dh == 0) {
             localSCC.sesEmp += 2;
+            
             data.SCC.emp += 2;
             data.SCC.empTime = 0;
             data.SCC.dh = -1;
@@ -174,11 +242,13 @@ register("chat", (msg) => {
             localSCC.sesCarrot += 2;
             data.SCC.carrot += 2;
             data.SCC.dh = -1;
+            localSCC.cloverDH = 1;
             data.save();
         } else {
             localSCC.sesCarrot += 1;
             data.SCC.carrot += 1;
             data.SCC.dh = -1;
+            localSCC.cloverDH = 0;
             data.save();
         }
     } else {
@@ -203,6 +273,22 @@ register("step", () => {
 
 //Clover core alert
 register("chat", (mf) => {
+
+    if(localSCC.cloverDH == 1 && (localSCC.prevSesCarrot+2 == localSCC.sesCarrot) && (localSCC.prevSesCarrot != 0)) {
+        //b2b lucky clover cores!
+        data.MENTS.b2b_clover = true;
+        data.save();
+    } else if(localSCC.cloverDH == 0 && ((localSCC.prevSesCarrot+1) == localSCC.sesCarrot) && (localSCC.prevSesCarrot != 0)) {
+        //also b2b lucky clover cores!
+        data.MENTS.b2b_clover = true;
+        data.save();
+    }
+
+    localSCC.prevSesCarrot = localSCC.sesCarrot;
+
+    data.SCC.cores += 1;
+    data.save();
+
 
     if(!settings.luckyDrop) return;
 

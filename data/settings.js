@@ -9,6 +9,7 @@ import {
     @SwitchProperty,
     @TextProperty,
     @NumberProperty,
+    @ParagraphProperty,
     @Vigilant
 } from "Vigilance";
 
@@ -37,11 +38,13 @@ class Settings {
         //ink features
         this.addDependency("Ink Display", "Track Ink Stats");
         this.addDependency("Ink Display Color", "Ink Display");
+        this.addDependency("Move Ink Display HUD", "Ink Display");
         this.addDependency("AFK Timer", "Ink Timer");
         this.addDependency("Money Display Color", "Track Money Per Hour");
+        this.addDependency("Move Money Display HUD", "Track Money Per Hour");
         this.addDependency("Ink Goal Display Color", "Ink Goal Display");
+        this.addDependency( "Move Ink Goal Display HUD", "Ink Goal Display");
         this.addDependency("Ink Goal Number", "Ink Goal Display");
-
 
         //sea creature features
         this.addDependency("Emp Timer", "Track Sea Creatures");
@@ -49,6 +52,8 @@ class Settings {
         this.addDependency("Party Emperor Message", "Track Sea Creatures");
         this.addDependency("Sea Creature Display", "Track Sea Creatures");
         this.addDependency("Sea Creature Color", "Sea Creature Display");
+        this.addDependency("Move Sea Creature Display", "Sea Creature Display");
+
 
         //bestiary features
         this.addDependency("Oasis Display", "General Bestiary Toggle");
@@ -59,6 +64,7 @@ class Settings {
         //misc. features
         this.addDependency("Double Hook Message", "Double Hook Toggle");
         this.addDependency("Auto Party Message", "Auto Party Toggle");
+        this.addDependency("Rain Alert Sound", "Rain Alert");
 
         //event features
         this.addDependency("Spooky Display", "Spooky Tracking");
@@ -66,6 +72,13 @@ class Settings {
         this.addDependency("Grim and Phantom Announce", "Spooky Tracking");
         this.addDependency("Deep Sea Orb Alert", "Spooky Tracking");
         this.addDependency("Deep Sea Orb Chat", "Spooky Tracking");
+
+
+        //setting features
+        this.addDependency("Total Ink Collection", "Historical Ink Values");
+        this.addDependency("Squid Bestiary", "Historical Ink Values");
+        this.addDependency("Night Squid Bestiary", "Historical Ink Values");
+
 
          
         this.setCategoryDescription("Information", 
@@ -100,6 +113,16 @@ class Settings {
         java.awt.Desktop.getDesktop().browse(new java.net.URI("https://discord.gg/shrimple"));
     }
 
+    @ButtonProperty({
+        name: "Open Achievements!",
+        description: "Click the button to open the Achievements GUI!",
+        category: "Information",
+        placeholder: "Open"
+    })
+    openMentGUI() {
+        ChatLib.command("movetest", true);
+    }
+
 
 //========INKING========
 //
@@ -123,6 +146,16 @@ class Settings {
         subcategory: "General Inking"
     })
     inkDisplay = false;
+
+    @ButtonProperty({
+        name: "Move Ink Display HUD",
+        description: "Click the button to move the Ink Display",
+        category: "Inking",
+        subcategory: "General Inking"
+    })
+    openInkGUI() {
+        ChatLib.command("moveinkdisplay", true);
+    }
 
     @ColorProperty({
         name: "Ink Display Color",
@@ -163,6 +196,14 @@ class Settings {
     })
     rainCheck = false;
 
+    @PercentSliderProperty({
+        name: "Rain Alert Sound",
+        description: "Plays a sound when the rain is gone",
+        category: "Inking",
+        subcategory: "Misc. Features"
+    })
+    rainSound = 1.0;
+
 
 
 
@@ -185,6 +226,16 @@ class Settings {
     })
     moneyColor = Color.BLUE;
 
+    @ButtonProperty({
+        name: "Move Money Display HUD",
+        description: "Click the button to move the Money Display",
+        category: "Inking",
+        subcategory: "Money Tracking"
+    })
+    openMoneyGUI() {
+        ChatLib.command("movemoneydisplay", true);
+    }
+
 
 
     //ink goal features
@@ -206,6 +257,16 @@ class Settings {
     })
     inkGoalColor = Color.BLUE;
 
+    @ButtonProperty({
+        name: "Move Ink Goal Display HUD",
+        description: "Click the button to move the Ink Goal Display",
+        category: "Inking",
+        subcategory: "Ink Goal"
+    })
+    openInkGoalGUI() {
+        ChatLib.command("movegoaldisplay", true);
+    }
+
     @TextProperty({
         name: "Ink Goal Number",
         description: "Set a goal collection amount for ink and set your current ink with /setink <collection>",
@@ -213,6 +274,44 @@ class Settings {
         subcategory: "Ink Goal"
     })
     inkGoalNum = "0";
+
+    
+
+
+    //SET HISTORICAL INK VALUES
+    @SwitchProperty({
+        name: "Historical Ink Values",
+        description: "Historical ink values toggle",
+        category: "Inking",
+        subcategory: "Historical Ink Values"
+
+    })
+    inkHistorical = false;
+
+    @TextProperty({
+        name: "Total Ink Collection",
+        description: "Set your overall ink collection here, make sure to set correct value before inking! If you mess up, you can set it manually with /setink <collection>",
+        category: "Inking",
+        subcategory: "Historical Ink Values"
+    })
+    inkStart = "0";
+
+    @TextProperty({
+        name: "Squid Bestiary",
+        description: "Set your total squid kills here, make sure to set correct value before inking! If you mess up, you can set it manually with /setsquid <collection>",
+        category: "Inking",
+        subcategory: "Historical Ink Values"
+    })
+    squidStart = "0";
+
+    @TextProperty({
+        name: "Night Squid Bestiary",
+        description: "Set your total night squid kills here, make sure to set correct value before inking! If you mess up, you can set it manually with /setNightSquid <collection>",
+        category: "Inking",
+        subcategory: "Historical Ink Values"
+    })
+    nightSquidStart = "0";
+
 
 
 //========SEA CREATURES========
@@ -263,12 +362,21 @@ class Settings {
     })
     scColor = Color.BLUE;
 
+    @ButtonProperty({
+        name: "Move Sea Creature Display",
+        description: "Click the button to move the Sea Creature Display",
+        category: "Sea Creatures"
+    })
+    openSCDisplay() {
+        ChatLib.command("movescdisplay", true);
+    }
 
 
 
 
 
-//========MONEY========
+
+//========BESTIARY========
 //
 //
 //
@@ -389,6 +497,7 @@ class Settings {
         subcategory: "Spooky Fishing"
     })
     orbPartyAlert = false;
+
 
 
 

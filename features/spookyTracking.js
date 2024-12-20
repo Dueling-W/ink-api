@@ -1,5 +1,7 @@
-import { data } from "./utils"
-import settings from "./settings"
+import {data} from "../data/utils.js"
+import settings from "../data/settings"
+import * as functions from "../utils/functions.js"
+
 
 let localSpooky = {
     grim: 0,

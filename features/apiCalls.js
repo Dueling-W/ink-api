@@ -1,5 +1,6 @@
-import { data } from "./utils"
-import settings from "./settings"
+import {data} from "../data/utils.js"
+import settings from "../data/settings"
+import * as functions from "../utils/functions.js"
 
 //call api
 const url = "https://api.hypixel.net/v2/skyblock/bazaar";
@@ -17,11 +18,13 @@ var gui = new Gui();
 //
 
 register("dragged", (dx, dy, x, y) => {
-    if (!movecounter.isOpen()) return
+    if (!movecounter.isOpen()) return;
     data.SCC.moneyX = x
     data.SCC.moneyY = y
     data.save()
+
 });
+    
 
 register("command", () => {
     movecounter.open()
